@@ -14,7 +14,6 @@ from fake_useragent import UserAgent
 # r = requests.get(url, headers=headers)
 def musinsa_Crawling():
     # 헤더 설정
-    # headers = {"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36", "Accept-Language": "ko-KR,ko;q=0.8,en-US;q=0.5,en;q=0.3"}
     headers = {'User-Agent' : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"}
     url=f"https://www.musinsa.com/app/styles/lists?&sort=NEWEST&page=1"
     response=requests.get(url, headers=headers)
