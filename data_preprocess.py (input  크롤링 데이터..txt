@@ -1,0 +1,12 @@
+data_preprocess.py (input : 크롤링 데이터.json)
+-> 이미지 (cpu 분산처리), 텍스트 전처리 (캡션 번역 및 요약)
+reurn 전처리된 이미지, 텍스트 추가된 데이터 프레임 (pickle)
+clip_finetuning.py (input : 앞에서 구한 pickle)
+-> 모델 학습
+image_features.py (input : 학습시킨 모델)
+-> 이미지에서 특성 벡터 추출 -> 리스트화
+eval.py (input : 학습시킨 모델)
+-> 텍스트 특성 벡터 임베딩
+-> 앞에서 구한 이미지 특성 벡터 리스트 요소마다 코사인 유사도 계산
+=> 오름차순 정렬 반환
+=> 이미지 확인

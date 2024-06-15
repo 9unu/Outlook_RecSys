@@ -48,9 +48,13 @@ def summarize_text(text, max_length=77):
 """5. 번역 + 요약 병합"""
 def translate_and_summarize(text):
     print(text)
-    translator = Translator()  
-    translated = translator.translate(text, src='ko', dest='en')
-    result=summarize_text(translated.text)
-    print(result)
-    print('\n')
-    return result
+    translator = Translator()
+    try:
+        translated = translator.translate(text, src='ko', dest='en')
+        result = summarize_text(translated.text)
+        print(result)
+        print('\n')
+        return result
+    except Exception as e:
+        print("번역 오류:", e)
+        return "nan"

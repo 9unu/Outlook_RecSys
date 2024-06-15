@@ -19,6 +19,7 @@ if __name__ == '__main__':
     # df['all_caption'] = df['title'].apply(lambda x: x.strip()) + "<sep>" + df['caption'].apply(lambda x: x.strip())+ "<sep>" + df['tags'].apply(lambda x: ', '.join(x)).apply(lambda x: x.replace("#","")).apply(lambda x: x.strip())
     origin['caption'] = origin['caption'].apply(translate_and_summarize)
     print(origin.head())
+    origin.dropna(inplace=True)
     product_num=[]
     title=[]
     caption=[]
@@ -34,7 +35,7 @@ if __name__ == '__main__':
             image_link.append(image)
 
     df = pd.DataFrame({'product_num': product_num, 'title': title, 'caption': caption, 'tags': tags, 'image_link': image_link})
-    
+    # df=df.iloc[:1000]/
     """이미지 인코딩 분산 처리 (멀티 프로세싱)"""
     image_list = df['image_link'].to_list()
     chunk_num = mp.cpu_count()
