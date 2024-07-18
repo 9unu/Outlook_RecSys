@@ -27,7 +27,7 @@ if __name__ == "__main__":
     model, preprocess = clip.load("ViT-B/32", device=device, jit=False)
     model.load_state_dict(torch.load("best_model.pt"))
     model = model.to(device)
-    df = pd.read_pickle(r"C:\Users\KHU\Desktop\무신사\processed_data.pickle")
+    df = pd.read_pickle(r"C:\Users\KHU\Desktop\무신사\total_processed_data.pickle")
     processed_image_list = df['processed_image'].apply(unsqueeze_and_convert).to_list()
     image_features = get_image_feature(processed_image_list, model, device)
 

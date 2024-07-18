@@ -73,12 +73,11 @@ if __name__ == "__main__":
     # 모델 초기화
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model, preprocess = clip.load("ViT-B/32", device=device, jit=False)
-    BATCH_SIZE=16
-    EPOCH=10
+    BATCH_SIZE=8
+    EPOCH=30
 
     # 전처리 마친 데이터셋 : 이미지 (인코딩), 텍스트 (번역 및 요약) 
-    df = pd.read_pickle("processed_data.pickle")
-    
+    df = pd.read_pickle("total_processed_data.pickle")
     # trin, test 셋 분할
     train, test = train_test_split(df, test_size=0.2, random_state=42)
     train_dataset = ClipDataset(train, preprocess)
@@ -116,7 +115,7 @@ if __name__ == "__main__":
 
             images, texts, _ = batch
             images = images.to(device)
-            texts = clip.tokenize(texts).to(device)
+            texts = clip.tokenize(texts=texts, truncate=True).to(device)
             logits_per_image, logits_per_text = model(images, texts)
             ground_truth = torch.arange(BATCH_SIZE).to(device)
 
@@ -143,7 +142,7 @@ if __name__ == "__main__":
                 step += 1
                 images, texts, _ = batch
                 images = images.to(device)
-                texts = clip.tokenize(texts).to(device)
+                texts = clip.tokenize(texts=texts, truncate=True).to(device)
                 logits_per_image, logits_per_text = model(images, texts)
                 ground_truth = torch.arange(BATCH_SIZE).to(device)
 

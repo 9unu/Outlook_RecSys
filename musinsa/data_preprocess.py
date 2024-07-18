@@ -17,7 +17,6 @@ if __name__ == '__main__':
     # origin=pd.DataFrame(data)
     origin=pd.read_csv("musinsa_df_1.csv")
     # origin=origin.iloc[:40]
-    start=time.time()
     """제목 + 태그 + caption 을 전부 모델 학습에 사용하려했으나, 최대 input 길이가 77이라서 우선 caption만 input"""
     # df['all_caption'] = df['title'].apply(lambda x: x.strip()) + "<sep>" + df['caption'].apply(lambda x: x.strip())+ "<sep>" + df['tags'].apply(lambda x: ', '.join(x)).apply(lambda x: x.replace("#","")).apply(lambda x: x.strip())
     origin['caption'] = origin['caption'].apply(translate_and_summarize)
@@ -41,25 +40,23 @@ if __name__ == '__main__':
     """이미지 인코딩 분산 처리 (멀티 프로세싱)"""
     image_list = df['image_link'].to_list()
     chunk_num = mp.cpu_count()
-    # if len(df)>chunk_num:
-    #     chunks = create_chunks(image_list, chunk_num)
+    if len(df)>chunk_num:
+        chunks = create_chunks(image_list, chunk_num)
         
-    #     # 전처리된 데이터 병합
-    #     pool = mp.Pool(processes=chunk_num)
-    #     image_list_pool = pool.starmap(image_process, [(chunk, processor) for chunk in chunks])
-    #     pool.close()
-    #     pool.join()
-    #     processed_image_list = [image for sublist in image_list_pool for image in sublist]
-    #     df['processed_image'] = processed_image_list
+        # 전처리된 데이터 병합
+        pool = mp.Pool(processes=chunk_num)
+        image_list_pool = pool.starmap(image_process, [(chunk, processor) for chunk in chunks])
+        pool.close()
+        pool.join()
+        processed_image_list = [image for sublist in image_list_pool for image in sublist]
+        df['processed_image'] = processed_image_list
     
-    # else:
-    #     df['processed_image']=image_process(image_list, processor)
-    df['processed_image']=image_process(image_list, processor)
+    else:
+        df['processed_image']=image_process(image_list, processor)
+    
     try:
         df_last= pd.read_pickle("processed_data.pickle")
         df=pd.concat([df_last, df], axis=0)
         df.to_pickle("processed_data.pickle")
     except:
         df.to_pickle("processed_data.pickle")
-    end=time.time()
-    print("소요시간:", (end-start)//60)

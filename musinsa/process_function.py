@@ -16,20 +16,14 @@ def create_chunks(data_list, chunk_num):
     if len(data_list) % chunk_num != 0:
         chunks.append(data_list[chunk_num * chunk_size:])
     return chunks
-import numpy as np
+
 """2. 이미지 전처리 (CPU)"""
 def image_process(image_list, processor):
     processed_image_list = []
     for image_link in image_list:
-        headers = {'User-Agent' : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"}
-        try:
-            response = requests.get(image_link,headers=headers)
-            processed_image = processor(Image.open(BytesIO(response.content)))
-            processed_image_list.append(processed_image)
-        except Exception as e:
-            print("오류:",image_link)
-            print("오류 내용:",e)
-            processed_image_list.append(np.nan)
+        response = requests.get(image_link)
+        processed_image = processor(Image.open(BytesIO(response.content)))
+        processed_image_list.append(processed_image)
     return processed_image_list
 
 """3. 한글 -> 영어 변환"""
@@ -53,13 +47,13 @@ def summarize_text(text, max_length=77):
 
 """5. 번역 + 요약 병합"""
 def translate_and_summarize(text):
-    # print(text)
+    print(text)
     translator = Translator()
     try:
         translated = translator.translate(text, src='ko', dest='en')
         result = summarize_text(translated.text)
-        # print(result)
-        # print('\n')
+        print(result)
+        print('\n')
         return result
     except Exception as e:
         print("번역 오류:", e)
